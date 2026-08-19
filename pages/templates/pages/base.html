@@ -1,0 +1,42 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Matt Stevenson Music{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/site.css' %}">
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body>
+    <header>
+        <a class="site-banner" href="{% url 'pages:home' %}" aria-label="Matt Stevenson home"></a>
+        <nav aria-label="Primary navigation">
+            <div class="nav__links-bar">
+                <a href="{% url 'pages:home' %}">Latest</a>
+                <a href="{% url 'pages:about' %}">About</a>
+                <!-- <a href="{% url 'pages:interactive' %}">Interactive</a> -->
+                <form class="nav__search" action="{% url 'pages:home' %}" method="get" role="search">
+                    <label for="post-search">Search posts</label>
+                    <div class="nav__search-controls">
+                        <input id="post-search" name="q" type="search" value="{{ search_query }}"
+                            placeholder="Search posts" autocomplete="off">
+                        <button type="submit">Search</button>
+                    </div>
+                    {% if tag_slug %}<input type="hidden" name="tag" value="{{ tag_slug }}">{% endif %}
+                </form>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    {% block extra_scripts %}{% endblock %}
+</body>
+
+</html>

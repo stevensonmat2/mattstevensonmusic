@@ -1,0 +1,22 @@
+{% for post in posts %}
+<article class="post" id="post-{{ post.pk }}">
+    {% if post.top_image %}
+    <img class="post__top-image" src="{{ post.top_image.url }}" alt="">
+    {% endif %}
+    <div class="post__content">
+        <p class="post__date"><time datetime="{{ post.published_at|date:'c' }}">{{ post.published_at|date:'F j, Y'
+                }}</time></p>
+        <h2>{{ post.title }}</h2>
+        <div class="post__body">{{ post.body_html|safe }}</div>
+        {% if post.tags.exists %}
+        <ul class="post__tags" aria-label="Tags">
+            {% for tag in post.tags.all %}
+            <li><a href="{% url 'pages:home' %}?tag={{ tag.slug|urlencode }}">#{{ tag.name }}</a></li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+</article>
+{% empty %}
+<p class="feed__empty">There are no published posts yet.</p>
+{% endfor %}
