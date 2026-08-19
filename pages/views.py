@@ -1,11 +1,21 @@
+import logging
+import time
+
+from django.conf import settings
+from django.core.cache import cache
+from django.core.mail import EmailMessage
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.template.loader import render_to_string
 
+from .forms import ContactForm
 from .models import Post
 
 
 FEED_PAGE_SIZE = 5
+CONTACT_RATE_LIMIT = 5
+CONTACT_RATE_WINDOW = 60 * 60
+logger = logging.getLogger(__name__)
 
 
 def _feed_slice(offset, query='', tag_slug=''):
@@ -55,3 +65,54 @@ def about(request):
 
 def interactive(request):
     return render(request, 'pages/interactive.html')
+
+
+def contact(request):
+    if request.method == 'POST':
+        rate_key = f'contact-rate:{request.META.get("REMOTE_ADDR", "unknown")}'
+        if cache.add(rate_key, 1, CONTACT_RATE_WINDOW):
+            attempts = 1
+        else:
+            try:
+                attempts = cache.incr(rate_key)
+            except ValueError:
+                cache.add(rate_key, 1, CONTACT_RATE_WINDOW)
+                attempts = 1
+        if attempts > CONTACT_RATE_LIMIT:
+            return render(request, 'pages/contact.html', {
+                'form': ContactForm(request.POST),
+                'rate_limited': True,
+            }, status=429)
+
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            recipient = getattr(settings, 'CONTACT_EMAIL', '')
+            if not recipient:
+                logger.error('CONTACT_EMAIL is not configured; contact form submission rejected.')
+                return render(request, 'pages/contact.html', {
+                    'form': form,
+                    'send_error': True,
+                }, status=503)
+
+            try:
+                EmailMessage(
+                    subject='Website contact message',
+                    body=(
+                        f"Email: {form.cleaned_data['email']}\n\n"
+                        f"{form.cleaned_data['message']}"
+                    ),
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    to=[recipient],
+                    reply_to=[form.cleaned_data['email']],
+                ).send(fail_silently=False)
+            except Exception:
+                logger.exception('Contact form email delivery failed.')
+                return render(request, 'pages/contact.html', {
+                    'form': form,
+                    'send_error': True,
+                }, status=503)
+            return render(request, 'pages/contact_success.html')
+    else:
+        form = ContactForm(initial={'form_started': int(time.time())})
+
+    return render(request, 'pages/contact.html', {'form': form})
