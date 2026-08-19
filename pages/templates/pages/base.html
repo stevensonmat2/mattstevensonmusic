@@ -18,29 +18,29 @@
         <a class="site-banner" href="{% url 'pages:home' %}" aria-label="Matt Stevenson home"></a>
     </header>
 
-        <nav class="navbar navbar-expand-md sticky-top" aria-label="Primary navigation">
-            <div class="container-xl justify-content-center">
+    <nav class="navbar navbar-expand-md sticky-top" aria-label="Primary navigation">
+        <div class="container-xl justify-content-center">
             <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#primary-navigation" aria-controls="primary-navigation" aria-expanded="false"
-                    aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse flex-grow-0 justify-content-center" id="primary-navigation">
-                    <div class="navbar-nav">
-                        <a class="nav-link" href="{% url 'pages:home' %}">Latest</a>
-                        <a class="nav-link" href="{% url 'pages:about' %}">About</a>
-                        <a class="nav-link" href="{% url 'pages:contact' %}">Contact</a>
-                    </div>
-                    <form class="d-flex gap-2 mt-3 mt-md-0" action="{% url 'pages:home' %}" method="get" role="search">
-                        <label class="visually-hidden" for="post-search">Search posts</label>
-                        <input class="form-control" id="post-search" name="q" type="search" value="{{ search_query }}"
-                            placeholder="Search posts" autocomplete="off">
-                        <button class="btn btn-dark text-nowrap" type="submit">Search</button>
-                        {% if tag_slug %}<input type="hidden" name="tag" value="{{ tag_slug }}">{% endif %}
-                    </form>
+                data-bs-target="#primary-navigation" aria-controls="primary-navigation" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse flex-grow-0 justify-content-center" id="primary-navigation">
+                <div class="navbar-nav">
+                    <a class="nav-link" href="{% url 'pages:home' %}">Latest</a>
+                    <a class="nav-link" href="{% url 'pages:about' %}">About</a>
+                    <a class="nav-link" href="{% url 'pages:contact' %}">Contact</a>
                 </div>
+                <form class="d-flex gap-2 mt-3 mt-md-0" action="{% url 'pages:home' %}" method="get" role="search">
+                    <label class="visually-hidden" for="post-search">Search posts</label>
+                    <input class="form-control" id="post-search" name="q" type="search" value="{{ search_query }}"
+                        placeholder="Search posts" autocomplete="off">
+                    <button class="btn btn-dark text-nowrap" type="submit">Search</button>
+                    {% if tag_slug %}<input type="hidden" name="tag" value="{{ tag_slug }}">{% endif %}
+                </form>
             </div>
-        </nav>
+        </div>
+    </nav>
 
     <main class="container-xl py-5 pb-5">
         {% block content %}{% endblock %}

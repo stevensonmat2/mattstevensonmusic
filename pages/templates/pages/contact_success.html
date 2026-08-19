@@ -1,0 +1,12 @@
+{% extends 'pages/base.html' %}
+
+{% block title %}Message sent | Matt Stevenson Music{% endblock %}
+
+{% block content %}
+<div class="text-center py-5">
+    <p class="eyebrow mb-2">Thank you</p>
+    <h1 class="display-5 fw-semibold">Message sent</h1>
+    <p class="lead">Thanks for getting in touch. Your message has been forwarded.</p>
+    <a class="btn btn-dark mt-3" href="{% url 'pages:home' %}">Back to latest posts</a>
+</div>
+{% endblock %}

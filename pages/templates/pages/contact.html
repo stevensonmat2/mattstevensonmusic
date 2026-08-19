@@ -1,0 +1,42 @@
+{% extends 'pages/base.html' %}
+
+{% block title %}Contact | Matt Stevenson Music{% endblock %}
+
+{% block extra_head %}
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="mb-4">
+            <h1 class="display-5 fw-semibold">Contact</h1>
+        </div>
+
+        {% if rate_limited %}
+        <div class="alert alert-warning" role="alert">Too many messages have been sent from this address. Please try
+            again
+            later.</div>
+        {% elif send_error %}
+        <div class="alert alert-danger" role="alert">The message could not be sent right now. Please try again later.
+        </div>
+        {% endif %}
+
+        <form class="contact-form contact-panel bg-white border rounded shadow-sm p-4 p-md-5" method="post">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            {{ form.form_started }}
+            <div class="mb-4">
+                <label class="form-label" for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+                {{ form.email }}
+                {{ form.email.errors }}
+            </div>
+            <div class="mb-4">
+                <label class="form-label" for="{{ form.message.id_for_label }}">{{ form.message.label }}</label>
+                {{ form.message }}
+                {{ form.message.errors }}
+            </div>
+            <button class="btn btn-dark" type="submit">Send message</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

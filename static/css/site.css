@@ -1,16 +1,21 @@
 :root {
-    color: #18212b;
-    background: #f4f1ea;
+    --site-ink: #18212b;
+    --site-muted: #6c6a63;
+    --site-paper: #fffdf9;
+    --site-background: #f4f1ea;
+    --site-border: #d8d1c4;
+}
+
+body {
+    min-width: 320px;
+    color: var(--site-ink);
+    background: var(--site-background);
     font-family: Georgia, 'Times New Roman', serif;
     line-height: 1.6;
 }
 
-body {
-    margin: 0;
-}
-
-header {
-    border-bottom: 1px solid #d8d1c4;
+.site-header {
+    border-bottom: 1px solid var(--site-border);
     background: #f9f7f2;
 }
 
@@ -18,132 +23,58 @@ header {
     display: block;
     width: 100%;
     height: min(180px, 18.4615vw);
-    background-color: #000;
-    background-image: url('../images/bandcamp_banner_timeWas_2.png');
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: contain;
+    min-height: 72px;
+    background: #000 url('../images/bandcamp_banner_timeWas_2.png') center / contain no-repeat;
 }
 
-nav {
-    display: flex;
-    justify-content: center;
-    box-sizing: border-box;
-    margin: 0 auto;
-    padding: 0.75rem clamp(1rem, 4vw, 2rem);
+.navbar {
+    --bs-navbar-padding-y: 0.75rem;
+    border-bottom: 1px solid var(--site-border);
+    background: #f9f7f2;
 }
 
-.nav__links-bar {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    max-width: 100%;
-    flex-wrap: wrap;
-    gap: 1.25rem;
+.navbar-brand,
+.navbar .nav-link {
+    color: var(--site-ink);
 }
 
-nav a {
-    color: inherit;
-    text-decoration: none;
+.navbar .nav-link:hover,
+.navbar .nav-link:focus,
+.navbar-brand:hover,
+.navbar-brand:focus {
+    color: #8a3f2e;
 }
 
-main {
-    max-width: 42rem;
-    margin: 0 auto;
-    padding: 3rem 1.25rem 6rem;
-}
-
-h1,
-h2 {
-    line-height: 1.15;
-}
-
-.about__artist-image {
-    display: block;
-    width: 100%;
-    height: auto;
-    margin: 1.5rem 0;
+.eyebrow {
+    color: var(--site-muted);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
 }
 
 .about__copy p {
-    margin: 0 0 1.25rem;
+    margin-bottom: 1.25rem;
 }
 
-.nav__search {
-    margin-left: 0;
-}
-
-.nav__search label {
-    display: block;
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    white-space: nowrap;
-    font-weight: bold;
-}
-
-.nav__search-controls {
-    display: flex;
-    gap: 0.5rem;
-}
-
-.nav__search input {
-    min-width: 0;
-    width: min(10rem, 40vw);
-    padding: 0.4rem 0.6rem;
-    border: 1px solid #bdb5a8;
-    background: #fffdf9;
-    font: inherit;
-}
-
-.nav__search button {
-    padding: 0.4rem 0.75rem;
-    border: 0;
-    background: #18212b;
-    color: #fffdf9;
-    font: inherit;
-    cursor: pointer;
-}
-
-@media (max-width: 42rem) {
-    .nav__links-bar {
-        gap: 0.75rem;
+@media (min-width: 992px) {
+    .about__copy--aligned {
+        padding-top: 4.5rem;
     }
-
-    .nav__search input {
-        width: auto;
-        flex: 1;
-    }
-}
-
-.feed__posts {
-    display: grid;
-    gap: 2.5rem;
-    margin-top: 2rem;
 }
 
 .post {
     overflow: hidden;
-    border: 1px solid #d8d1c4;
-    background: #fffdf9;
+    background: var(--site-paper);
 }
 
 .post__top-image {
-    display: block;
-    width: 100%;
     max-height: 28rem;
     object-fit: cover;
 }
 
-.post__content {
-    padding: 1.5rem;
-}
-
 .post__date {
-    margin: 0;
-    color: #6c6a63;
+    color: var(--site-muted);
     font-size: 0.85rem;
 }
 
@@ -158,28 +89,15 @@ h2 {
     color: #8a3f2e;
 }
 
-.post__tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    margin: 1.5rem 0 0;
+.post__body table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+.errorlist {
+    margin: 0.35rem 0 0;
     padding: 0;
-    color: #6c6a63;
+    color: #8a3f2e;
     list-style: none;
-    font-size: 0.9rem;
-}
-
-.post__tags a {
-    color: inherit;
-}
-
-.feed__status {
-    min-height: 1.6rem;
-    margin: 2rem 0;
-    color: #6c6a63;
-    text-align: center;
-}
-
-.feed__sentinel {
-    height: 1px;
 }
