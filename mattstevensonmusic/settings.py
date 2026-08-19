@@ -48,6 +48,7 @@ ALLOWED_HOSTS = env_list('DJANGO_ALLOWED_HOSTS')
 
 INSTALLED_APPS = [
     'pages',
+    'django_ckeditor_5',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -141,6 +142,20 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+CKEDITOR_5_CONFIGS = {
+    'default': {
+        'toolbar': [
+            'heading', '|', 'bold', 'italic', 'link', 'bulletedList',
+            'numberedList', 'blockQuote', 'insertTable', 'imageUpload',
+            'mediaEmbed', 'codeBlock', 'undo', 'redo',
+        ],
+        'image': {
+            'toolbar': ['imageTextAlternative', 'imageStyle:inline', 'imageStyle:block'],
+        },
+    },
+}
+CKEDITOR_5_UPLOAD_PATH = 'posts/inline-images/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

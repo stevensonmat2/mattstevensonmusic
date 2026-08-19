@@ -1,5 +1,6 @@
 import bleach
 import markdown
+import re
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
@@ -8,11 +9,14 @@ from django.utils.text import slugify
 
 ALLOWED_TAGS = set(bleach.sanitizer.ALLOWED_TAGS) | {
     'h1', 'h2', 'h3', 'h4', 'p', 'br', 'hr', 'img', 'pre', 'code',
+    'blockquote', 'strong', 'em', 'u', 's', 'ul', 'ol', 'li', 'figure',
+    'figcaption', 'table', 'thead', 'tbody', 'tr', 'th', 'td', 'span',
 }
 ALLOWED_ATTRIBUTES = {
     **bleach.sanitizer.ALLOWED_ATTRIBUTES,
     'a': {'href', 'title', 'rel', 'target'},
     'img': {'src', 'alt', 'title', 'width', 'height'},
+    '*': {'class', 'style'},
 }
 
 
@@ -40,7 +44,7 @@ class Post(models.Model):
     slug = models.SlugField(max_length=220, unique=True)
     top_image = models.ImageField(upload_to='posts/top-images/', blank=True)
     body = models.TextField(
-        help_text='Write Markdown. Use ![alt text](image-url) for inline images and [label](url) for links.',
+        help_text='Use the rich text editor to format the post body and add links or images.',
     )
     tags = models.ManyToManyField(Tag, blank=True, related_name='posts')
     is_published = models.BooleanField(default=False)
@@ -63,10 +67,13 @@ class Post(models.Model):
 
     @property
     def body_html(self):
-        rendered = markdown.markdown(
-            self.body,
-            extensions=['extra', 'nl2br', 'sane_lists'],
-        )
+        if re.search(r'<[a-z][^>]*>', self.body, re.IGNORECASE):
+            rendered = self.body
+        else:
+            rendered = markdown.markdown(
+                self.body,
+                extensions=['extra', 'nl2br', 'sane_lists'],
+            )
         return bleach.clean(
             rendered,
             tags=ALLOWED_TAGS,

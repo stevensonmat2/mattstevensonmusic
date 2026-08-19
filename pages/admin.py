@@ -1,6 +1,17 @@
+from django import forms
 from django.contrib import admin
+from django_ckeditor_5.widgets import CKEditor5Widget
 
 from .models import Post, Tag
+
+
+class PostAdminForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = '__all__'
+        widgets = {
+            'body': CKEditor5Widget(config_name='default'),
+        }
 
 
 @admin.register(Tag)
@@ -12,6 +23,7 @@ class TagAdmin(admin.ModelAdmin):
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
+    form = PostAdminForm
     list_display = ('title', 'is_published', 'published_at', 'updated_at')
     list_filter = ('is_published', 'tags')
     search_fields = ('title', 'body')
