@@ -2,7 +2,15 @@ from django import forms
 from django.contrib import admin
 from django_ckeditor_5.widgets import CKEditor5Widget
 
-from .models import Post, Release, Tag
+from .models import Article, Post, Release, SiteSettings, Tag
+
+
+@admin.register(SiteSettings)
+class SiteSettingsAdmin(admin.ModelAdmin):
+    fields = ('site_icon',)
+
+    def has_add_permission(self, request):
+        return not SiteSettings.objects.exists()
 
 
 class PostAdminForm(forms.ModelForm):
@@ -35,6 +43,28 @@ class PostAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {'fields': ('title', 'slug', 'top_image', 'body', 'tags')}),
         ('Publishing', {'fields': ('is_published', 'published_at')}),
+        ('History', {'fields': ('created_at', 'updated_at'), 'classes': ('collapse',)}),
+    )
+
+
+class ArticleAdminForm(forms.ModelForm):
+    class Meta:
+        model = Article
+        fields = '__all__'
+        widgets = {
+            'body': CKEditor5Widget(config_name='default'),
+        }
+
+
+@admin.register(Article)
+class ArticleAdmin(admin.ModelAdmin):
+    form = ArticleAdminForm
+    list_display = ('title', 'subtitle', 'updated_at')
+    search_fields = ('title', 'subtitle', 'body')
+    prepopulated_fields = {'slug': ('title',)}
+    readonly_fields = ('created_at', 'updated_at')
+    fieldsets = (
+        (None, {'fields': ('title', 'slug', 'subtitle', 'image', 'image_credit', 'body')}),
         ('History', {'fields': ('created_at', 'updated_at'), 'classes': ('collapse',)}),
     )
 

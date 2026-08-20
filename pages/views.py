@@ -9,7 +9,7 @@ from django.shortcuts import render
 from django.template.loader import render_to_string
 
 from .forms import ContactForm
-from .models import Post, Release
+from .models import Article, Post, Release
 
 
 FEED_PAGE_SIZE = 5
@@ -60,7 +60,9 @@ def post_feed(request):
 
 
 def about(request):
-    return render(request, 'pages/about.html')
+    return render(request, 'pages/about.html', {
+        'article': Article.objects.filter(slug='bio').first(),
+    })
 
 
 def discography(request):

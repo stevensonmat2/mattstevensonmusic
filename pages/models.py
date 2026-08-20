@@ -22,6 +22,38 @@ ALLOWED_ATTRIBUTES = {
 }
 
 
+class SiteSettings(models.Model):
+    site_icon = FilerImageField(
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        help_text='The image shown as the browser tab icon.',
+    )
+
+    class Meta:
+        verbose_name = 'site settings'
+        verbose_name_plural = 'site settings'
+
+    def __str__(self):
+        return 'Site settings'
+
+    @classmethod
+    def load(cls):
+        settings, _ = cls.objects.get_or_create(pk=1)
+        return settings
+
+    @property
+    def site_icon_url(self):
+        if self.site_icon and self.site_icon.file:
+            return self.site_icon.url
+        return static('images/site-mark.svg')
+
+    def save(self, *args, **kwargs):
+        self.pk = 1
+        super().save(*args, **kwargs)
+
+
 class Tag(models.Model):
     name = models.CharField(max_length=50, unique=True)
     slug = models.SlugField(max_length=60, unique=True)
@@ -94,6 +126,47 @@ class Post(models.Model):
 
     def get_absolute_url(self):
         return reverse('pages:home') + f'#post-{self.pk}'
+
+
+class Article(models.Model):
+    title = models.CharField(max_length=200, blank=True)
+    slug = models.SlugField(max_length=220, unique=True)
+    subtitle = models.CharField(max_length=300, blank=True)
+    image = FilerImageField(null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+    image_credit = models.CharField(max_length=200, blank=True)
+    body = models.TextField(
+        help_text='Use the rich text editor to format the article body and add links or images.',
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ('title', '-pk')
+
+    def __str__(self):
+        return self.title or self.slug
+
+    @property
+    def image_url(self):
+        if self.image and self.image.file:
+            return self.image.url
+        return static('images/artist_pic_BTMFDR_1790x1790.png')
+
+    @property
+    def body_html(self):
+        if re.search(r'<[a-z][^>]*>', self.body, re.IGNORECASE):
+            rendered = self.body
+        else:
+            rendered = markdown.markdown(
+                self.body,
+                extensions=['extra', 'nl2br', 'sane_lists'],
+            )
+        return bleach.clean(
+            rendered,
+            tags=ALLOWED_TAGS,
+            attributes=ALLOWED_ATTRIBUTES,
+            protocols={'http', 'https', 'mailto'},
+        )
 
 
 class Release(models.Model):
