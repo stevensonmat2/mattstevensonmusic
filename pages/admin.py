@@ -2,7 +2,21 @@ from django import forms
 from django.contrib import admin
 from django_ckeditor_5.widgets import CKEditor5Widget
 
-from .models import Article, Post, Release, SiteSettings, Tag
+from .models import Article, DailyVisitor, Post, Release, SiteSettings, Tag, VisitorCountSnapshot
+
+
+@admin.register(VisitorCountSnapshot)
+class VisitorCountSnapshotAdmin(admin.ModelAdmin):
+    list_display = ('checked_at', 'visitor_count')
+    readonly_fields = ('checked_at', 'visitor_count')
+
+
+@admin.register(DailyVisitor)
+class DailyVisitorAdmin(admin.ModelAdmin):
+    list_display = ('day', 'first_seen_at')
+    list_filter = ('day',)
+    readonly_fields = ('day', 'visitor_id', 'first_seen_at')
+    search_fields = ('visitor_id',)
 
 
 @admin.register(SiteSettings)

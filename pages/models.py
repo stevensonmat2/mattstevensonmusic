@@ -54,6 +54,28 @@ class SiteSettings(models.Model):
         super().save(*args, **kwargs)
 
 
+class DailyVisitor(models.Model):
+    day = models.DateField()
+    visitor_id = models.CharField(max_length=64)
+    first_seen_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=('day', 'visitor_id'),
+                name='unique_daily_visitor',
+            ),
+        ]
+
+
+class VisitorCountSnapshot(models.Model):
+    checked_at = models.DateTimeField(auto_now_add=True)
+    visitor_count = models.PositiveIntegerField()
+
+    class Meta:
+        ordering = ('-checked_at',)
+
+
 class Tag(models.Model):
     name = models.CharField(max_length=50, unique=True)
     slug = models.SlugField(max_length=60, unique=True)
