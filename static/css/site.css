@@ -45,6 +45,18 @@ body {
     color: #8a3f2e;
 }
 
+.dropdown-menu {
+    border-color: var(--site-border);
+    border-radius: 0;
+    background: var(--site-paper);
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+    color: var(--site-ink);
+    background: var(--site-background);
+}
+
 .eyebrow {
     color: var(--site-muted);
     font-size: 0.8rem;
@@ -55,6 +67,33 @@ body {
 
 .about__copy p {
     margin-bottom: 1.25rem;
+}
+
+.release__image {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+}
+
+.release__artist {
+    color: var(--site-muted);
+    font-style: italic;
+}
+
+.release__date {
+    color: var(--site-muted);
+    font-size: 0.85rem;
+}
+
+.release__text p:last-child {
+    margin-bottom: 0;
+}
+
+.release__link {
+    display: inline-block;
+    margin-top: 1rem;
+    color: #8a3f2e;
 }
 
 @media (min-width: 992px) {

@@ -49,6 +49,8 @@ ALLOWED_HOSTS = env_list('DJANGO_ALLOWED_HOSTS')
 INSTALLED_APPS = [
     'pages',
     'django_ckeditor_5',
+    'easy_thumbnails',
+    'filer',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -136,11 +138,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-MEDIA_URL = 'media/'
+MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 CKEDITOR_5_CONFIGS = {
@@ -175,6 +177,7 @@ EMAIL_PORT = int(os.environ.get('DJANGO_EMAIL_PORT', '587'))
 EMAIL_HOST_USER = os.environ.get('DJANGO_EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = os.environ.get('DJANGO_EMAIL_HOST_PASSWORD', '')
 EMAIL_USE_TLS = env_bool('DJANGO_EMAIL_USE_TLS', True)
+EMAIL_TIMEOUT = int(os.environ.get('DJANGO_EMAIL_TIMEOUT', '10'))
 
 if not DEBUG:
     if SECRET_KEY.startswith('django-insecure-'):

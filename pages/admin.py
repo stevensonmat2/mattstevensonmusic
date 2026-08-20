@@ -2,13 +2,14 @@ from django import forms
 from django.contrib import admin
 from django_ckeditor_5.widgets import CKEditor5Widget
 
-from .models import Post, Tag
+from .models import Post, Release, Tag
 
 
 class PostAdminForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = '__all__'
+        exclude = ('legacy_top_image',)
         widgets = {
             'body': CKEditor5Widget(config_name='default'),
         }
@@ -36,3 +37,21 @@ class PostAdmin(admin.ModelAdmin):
         ('Publishing', {'fields': ('is_published', 'published_at')}),
         ('History', {'fields': ('created_at', 'updated_at'), 'classes': ('collapse',)}),
     )
+
+
+class ReleaseAdminForm(forms.ModelForm):
+    class Meta:
+        model = Release
+        fields = '__all__'
+        exclude = ('legacy_image',)
+        widgets = {
+            'text': CKEditor5Widget(config_name='default'),
+        }
+
+
+@admin.register(Release)
+class ReleaseAdmin(admin.ModelAdmin):
+    form = ReleaseAdminForm
+    list_display = ('title', 'artist', 'release_date', 'sort_order', 'link')
+    search_fields = ('title', 'artist', 'text')
+    list_editable = ('sort_order',)

@@ -1,0 +1,36 @@
+{% extends 'pages/base.html' %}
+
+{% block title %}Discography | Matt Stevenson Music{% endblock %}
+
+{% block content %}
+<section class="discography">
+    <div class="mb-5">
+        <h1 class="display-5 fw-semibold mb-0">Discography</h1>
+    </div>
+
+    {% if releases %}
+    <div class="row g-4 g-lg-5">
+        {% for release in releases %}
+        <article class="col-md-6 col-xl-4">
+            <div class="release h-100">
+                <img class="release__image img-fluid" src="{{ release.image_url }}" alt="{{ release.title }} cover art">
+                <div class="release__content pt-3">
+                    <h2 class="h3 mb-2">{{ release.title }}</h2>
+                    <p class="release__artist mb-3">{{ release.artist }}</p>
+                    <p class="release__date mb-3">{{ release.release_date|date:"F j, Y" }}</p>
+                    <div class="release__text">{{ release.text_html|safe }}</div>
+                    {% if release.link %}
+                    <a class="release__link" href="{{ release.link }}" target="_blank" rel="noopener noreferrer">
+                        Listen / learn more <span aria-hidden="true">&rarr;</span>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-secondary">Releases are on the way.</p>
+    {% endif %}
+</section>
+{% endblock %}

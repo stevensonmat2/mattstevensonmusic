@@ -1,7 +1,7 @@
 {% for post in posts %}
 <article class="post card shadow-sm border-0" id="post-{{ post.pk }}">
     {% if post.top_image %}
-    <img class="post__top-image card-img-top" src="{{ post.top_image.url }}" alt="">
+    <img class="post__top-image card-img-top" src="{{ post.top_image_url }}" alt="">
     {% endif %}
     <div class="post__content card-body p-4 p-md-5">
         <p class="post__date card-subtitle mb-2"><time datetime="{{ post.published_at|date:'c' }}">

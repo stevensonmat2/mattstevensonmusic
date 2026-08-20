@@ -9,7 +9,7 @@ from django.shortcuts import render
 from django.template.loader import render_to_string
 
 from .forms import ContactForm
-from .models import Post
+from .models import Post, Release
 
 
 FEED_PAGE_SIZE = 5
@@ -63,6 +63,12 @@ def about(request):
     return render(request, 'pages/about.html')
 
 
+def discography(request):
+    return render(request, 'pages/discography.html', {
+        'releases': Release.objects.all(),
+    })
+
+
 def interactive(request):
     return render(request, 'pages/interactive.html')
 
@@ -95,7 +101,7 @@ def contact(request):
                 }, status=503)
 
             try:
-                EmailMessage(
+                message = EmailMessage(
                     subject='Website contact message',
                     body=(
                         f"Email: {form.cleaned_data['email']}\n\n"
@@ -104,7 +110,18 @@ def contact(request):
                     from_email=settings.DEFAULT_FROM_EMAIL,
                     to=[recipient],
                     reply_to=[form.cleaned_data['email']],
-                ).send(fail_silently=False)
+                )
+                sent_count = message.send(fail_silently=False)
+                if sent_count != 1:
+                    raise RuntimeError(f'Email backend reported {sent_count} messages sent.')
+                logger.info(
+                    'Contact form email accepted by backend=%s host=%s port=%s from=%s to=%s',
+                    settings.EMAIL_BACKEND,
+                    settings.EMAIL_HOST,
+                    settings.EMAIL_PORT,
+                    settings.DEFAULT_FROM_EMAIL,
+                    recipient,
+                )
             except Exception:
                 logger.exception('Contact form email delivery failed.')
                 return render(request, 'pages/contact.html', {
