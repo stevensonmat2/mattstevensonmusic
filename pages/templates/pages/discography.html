@@ -13,16 +13,25 @@
         {% for release in releases %}
         <article class="col-md-6 col-xl-4">
             <div class="release h-100">
+                {% if release.link %}
+                <a href="{{ release.link }}" target="_blank" rel="noopener noreferrer">
+                    <img class="release__image img-fluid" src="{{ release.image_url }}"
+                        alt="{{ release.title }} cover art">
+                </a>
+                {% else %}
                 <img class="release__image img-fluid" src="{{ release.image_url }}" alt="{{ release.title }} cover art">
+                {% endif %}
                 <div class="release__content pt-3">
                     <h2 class="h3 mb-2">{{ release.title }}</h2>
                     <p class="release__artist mb-3">{{ release.artist }}</p>
-                    <p class="release__date mb-3">{{ release.release_date|date:"F j, Y" }}</p>
-                    <div class="release__text">{{ release.text_html|safe }}</div>
+                    <p class="release__date">Released on {{ release.release_date|date:"F j, Y" }}</p>
                     {% if release.link %}
                     <a class="release__link" href="{{ release.link }}" target="_blank" rel="noopener noreferrer">
                         Listen / learn more <span aria-hidden="true">&rarr;</span>
                     </a>
+                    {% endif %}
+                    {% if release.text %}
+                    <div class="release__text">{{ release.text_html|safe }}</div>
                     {% endif %}
                 </div>
             </div>
