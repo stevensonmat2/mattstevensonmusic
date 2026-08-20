@@ -9,9 +9,10 @@
     <div class="col-lg-5">
         <h1 class="display-5 fw-semibold">{{ article.title|default:'About' }}</h1>
         {% if article.subtitle %}<p class="lead">{{ article.subtitle }}</p>{% endif %}
-        <img class="about__artist-image img-fluid rounded shadow-sm mt-3"
-            src="{{ article.image_url }}" alt="{{ article.title|default:'Matt Stevenson' }}">
-        {% if article.image_credit %}<p class="small text-secondary mt-2 mb-0">Photo credit: {{ article.image_credit }}</p>{% endif %}
+        <img class="about__artist-image img-fluid rounded shadow-sm mt-3" src="{{ article.image_url }}"
+            alt="{{ article.title|default:'Matt Stevenson' }}">
+        {% if article.image_credit %}<p class="small text-secondary mt-2 mb-0">Photo credit: {{ article.image_credit }}
+        </p>{% endif %}
     </div>
     <div class="about__copy about__copy--aligned col-lg-7">
         {{ article.body_html|safe }}
