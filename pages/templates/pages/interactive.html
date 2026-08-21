@@ -1,11 +1,161 @@
 {% extends 'pages/base.html' %}
+{% load static %}
 
 {% block title %}Interactive | Matt Stevenson Music{% endblock %}
 
 {% block content %}
-<div class="text-center py-5">
-    <p class="eyebrow mb-2">Coming soon</p>
-    <h1 class="display-5 fw-semibold">Interactive</h1>
-    <p class="lead">This interactive experience is coming soon.</p>
-</div>
+<section class="interactive" data-interactive-player>
+    <div class="interactive__intro mb-4">
+        <p class="eyebrow mb-2">Sound and image</p>
+        <h1 class="display-5 fw-semibold mb-2">Interactive</h1>
+        <p class="lead mb-0">Pair a song with a silent movie and let them move together.</p>
+    </div>
+
+    <div class="interactive__controls row g-3 mb-4">
+        <div class="col-md-6">
+            <label class="form-label" for="interactive-song">Song</label>
+            <select class="form-select" id="interactive-song" data-song-select>
+                <option value="">Select a song</option>
+                {% for song in songs %}
+                <option value="{{ song.pk }}" data-audio-url="{{ song.audio.url }}"
+                    data-effects="{{ song.effect_parameters|escapejs }}">
+                    {% if song.artist %}{{ song.artist }} - {% endif %}{{ song.title }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label" for="interactive-movie">Silent movie</label>
+            <select class="form-select" id="interactive-movie" data-movie-select>
+                <option value="">Select a movie</option>
+                {% for movie in silent_movies %}
+                <option value="{{ movie.pk }}" data-video-url="{{ movie.video.url }}"
+                    data-effects="{{ movie.effect_parameters|escapejs }}">{{ movie.title }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <div class="interactive__stage mb-4">
+        <video class="interactive__video" data-video muted loop playsinline preload="metadata"></video>
+        <audio data-audio preload="metadata"></audio>
+    </div>
+
+    <div class="interactive__actions d-flex flex-wrap align-items-center gap-3">
+        <button class="btn btn-dark" type="button" data-play-toggle disabled>Play together</button>
+        <span class="interactive__status" data-player-status role="status" aria-live="polite">
+            Select a song and a movie to begin.
+        </span>
+    </div>
+
+    <details class="interactive__lab mt-5" data-effects-panel>
+        <summary>Temporary music effects lab</summary>
+        <p class="interactive__lab-note">These controls are for testing only and do not change the saved song settings.</p>
+        <div class="row g-4">
+            <div class="col-md-6">
+                <fieldset class="interactive__effect-group">
+                    <legend>Volume</legend>
+                    <label for="effect-volume">Level <output data-effect-output="effect-volume">0 dB</output></label>
+                    <input class="form-range" id="effect-volume" type="range" min="-24" max="6" step="1" value="0"
+                        data-effect-input="volume">
+                </fieldset>
+            </div>
+            <div class="col-md-6">
+                <fieldset class="interactive__effect-group">
+                    <legend>Filter</legend>
+                    <label for="effect-filter-type">Type</label>
+                    <select class="form-select mb-2" id="effect-filter-type" data-effect-input="filter-type">
+                        <option value="off">Off</option>
+                        <option value="lowpass">Low-pass</option>
+                        <option value="highpass">High-pass</option>
+                        <option value="bandpass">Band-pass</option>
+                    </select>
+                    <label for="effect-filter-frequency">Frequency <output data-effect-output="effect-filter-frequency">8000 Hz</output></label>
+                    <input class="form-range" id="effect-filter-frequency" type="range" min="200" max="16000" step="100"
+                        value="8000" data-effect-input="filter-frequency">
+                </fieldset>
+            </div>
+            <div class="col-md-6">
+                <fieldset class="interactive__effect-group">
+                    <legend>Reverb</legend>
+                    <label for="effect-reverb-wet">Mix <output data-effect-output="effect-reverb-wet">0%</output></label>
+                    <input class="form-range" id="effect-reverb-wet" type="range" min="0" max="1" step="0.01" value="0"
+                        data-effect-input="reverb-wet">
+                    <label for="effect-reverb-decay">Decay <output data-effect-output="effect-reverb-decay">2.0 s</output></label>
+                    <input class="form-range" id="effect-reverb-decay" type="range" min="0.1" max="8" step="0.1" value="2"
+                        data-effect-input="reverb-decay">
+                </fieldset>
+            </div>
+            <div class="col-md-6">
+                <fieldset class="interactive__effect-group">
+                    <legend>Delay</legend>
+                    <label for="effect-delay-wet">Mix <output data-effect-output="effect-delay-wet">0%</output></label>
+                    <input class="form-range" id="effect-delay-wet" type="range" min="0" max="1" step="0.01" value="0"
+                        data-effect-input="delay-wet">
+                    <label for="effect-delay-time">Time <output data-effect-output="effect-delay-time">0.25 s</output></label>
+                    <input class="form-range" id="effect-delay-time" type="range" min="0.01" max="1" step="0.01" value="0.25"
+                        data-effect-input="delay-time">
+                    <label for="effect-delay-feedback">Feedback <output data-effect-output="effect-delay-feedback">0%</output></label>
+                    <input class="form-range" id="effect-delay-feedback" type="range" min="0" max="0.9" step="0.01" value="0"
+                        data-effect-input="delay-feedback">
+                </fieldset>
+            </div>
+            <div class="col-md-6">
+                <fieldset class="interactive__effect-group">
+                    <legend>Distortion</legend>
+                    <label for="effect-distortion-amount">Amount <output data-effect-output="effect-distortion-amount">0%</output></label>
+                    <input class="form-range" id="effect-distortion-amount" type="range" min="0" max="1" step="0.01" value="0"
+                        data-effect-input="distortion-amount">
+                    <label for="effect-distortion-wet">Mix <output data-effect-output="effect-distortion-wet">0%</output></label>
+                    <input class="form-range" id="effect-distortion-wet" type="range" min="0" max="1" step="0.01" value="0"
+                        data-effect-input="distortion-wet">
+                </fieldset>
+            </div>
+        </div>
+    </details>
+
+    <details class="interactive__lab mt-4" data-movie-effects-panel>
+        <summary>Temporary movie effects lab</summary>
+        <p class="interactive__lab-note">These visual controls are for testing only and do not change the saved movie settings.</p>
+        <div class="row g-4">
+            <div class="col-md-6">
+                <fieldset class="interactive__effect-group">
+                    <legend>Light and color</legend>
+                    <label for="movie-effect-brightness">Brightness <output data-movie-effect-output="movie-effect-brightness">100%</output></label>
+                    <input class="form-range" id="movie-effect-brightness" type="range" min="0" max="2" step="0.01" value="1"
+                        data-movie-effect-input="brightness">
+                    <label for="movie-effect-contrast">Contrast <output data-movie-effect-output="movie-effect-contrast">100%</output></label>
+                    <input class="form-range" id="movie-effect-contrast" type="range" min="0" max="2" step="0.01" value="1"
+                        data-movie-effect-input="contrast">
+                    <label for="movie-effect-saturate">Saturation <output data-movie-effect-output="movie-effect-saturate">100%</output></label>
+                    <input class="form-range" id="movie-effect-saturate" type="range" min="0" max="3" step="0.01" value="1"
+                        data-movie-effect-input="saturate">
+                </fieldset>
+            </div>
+            <div class="col-md-6">
+                <fieldset class="interactive__effect-group">
+                    <legend>Texture and tone</legend>
+                    <label for="movie-effect-hue">Hue rotation <output data-movie-effect-output="movie-effect-hue">0 degrees</output></label>
+                    <input class="form-range" id="movie-effect-hue" type="range" min="0" max="360" step="1" value="0"
+                        data-movie-effect-input="hue_rotate">
+                    <label for="movie-effect-blur">Blur <output data-movie-effect-output="movie-effect-blur">0 px</output></label>
+                    <input class="form-range" id="movie-effect-blur" type="range" min="0" max="12" step="0.5" value="0"
+                        data-movie-effect-input="blur">
+                    <label for="movie-effect-sepia">Sepia <output data-movie-effect-output="movie-effect-sepia">0%</output></label>
+                    <input class="form-range" id="movie-effect-sepia" type="range" min="0" max="1" step="0.01" value="0"
+                        data-movie-effect-input="sepia">
+                    <label for="movie-effect-grayscale">Grayscale <output data-movie-effect-output="movie-effect-grayscale">0%</output></label>
+                    <input class="form-range" id="movie-effect-grayscale" type="range" min="0" max="1" step="0.01" value="0"
+                        data-movie-effect-input="grayscale">
+                </fieldset>
+            </div>
+        </div>
+    </details>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="https://cdn.jsdelivr.net/npm/tone@15.0.4/build/Tone.js"
+    crossorigin="anonymous"></script>
+<script src="{% static 'js/interactive.js' %}" defer></script>
 {% endblock %}

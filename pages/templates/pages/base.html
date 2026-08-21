@@ -37,6 +37,7 @@
                             <li><a class="dropdown-item" href="{% url 'pages:discography' %}">Discography</a></li>
                         </ul>
                     </div>
+                    <a class="nav-link" href="{% url 'pages:interactive' %}">Interactive</a>
                     <a class="nav-link" href="{% url 'pages:contact' %}">Contact</a>
                 </div>
                 <form class="d-flex gap-2 mt-3 mt-md-0" action="{% url 'pages:home' %}" method="get" role="search">
@@ -54,13 +55,13 @@
         {% block content %}{% endblock %}
     </main>
 
-    <div class="bandcamp-player">
+    {% if not hide_bandcamp_player %}<div class="bandcamp-player">
         <iframe style="border: 0; width: 100%; height: 42px;"
             src="https://bandcamp.com/EmbeddedPlayer/album=4075061876/size=small/bgcol=ffffff/linkcol=0687f5/transparent=true/"
             seamless>
             <a href="https://mattstevenson.bandcamp.com/album/time-was">Time Was by BTMFDR</a>
         </iframe>
-    </div>
+    </div>{% endif %}
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"

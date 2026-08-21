@@ -96,6 +96,83 @@ body {
     color: #8a3f2e;
 }
 
+.interactive {
+    max-width: 62rem;
+    margin: 0 auto;
+}
+
+.interactive__stage {
+    overflow: hidden;
+    background: #111;
+    border: 1px solid var(--site-border);
+}
+
+.interactive__video {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: contain;
+    background: #111;
+}
+
+.interactive__stage audio {
+    display: none;
+}
+
+.interactive__status {
+    color: var(--site-muted);
+}
+
+.interactive__status--error {
+    color: #8a3f2e;
+}
+
+.interactive__lab {
+    border-top: 1px solid var(--site-border);
+    padding-top: 1rem;
+}
+
+.interactive__lab summary {
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.interactive__lab-note {
+    margin: 0.75rem 0 1.25rem;
+    color: var(--site-muted);
+    font-size: 0.9rem;
+}
+
+.interactive__effect-group {
+    min-width: 0;
+    margin: 0;
+    padding: 1rem;
+    border: 1px solid var(--site-border);
+    background: var(--site-paper);
+}
+
+.interactive__effect-group legend {
+    float: none;
+    width: auto;
+    margin: 0 0 0.75rem;
+    padding: 0;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.interactive__effect-group label {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 0.65rem;
+    font-size: 0.9rem;
+}
+
+.interactive__effect-group output {
+    color: var(--site-muted);
+    white-space: nowrap;
+}
+
 @media (min-width: 992px) {
     .about__copy--aligned {
         padding-top: 4.5rem;

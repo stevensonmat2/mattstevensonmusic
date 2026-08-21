@@ -9,7 +9,7 @@ from django.shortcuts import render
 from django.template.loader import render_to_string
 
 from .forms import ContactForm
-from .models import Article, Post, Release
+from .models import Article, Post, Release, SilentMovie, Song
 
 
 FEED_PAGE_SIZE = 5
@@ -72,7 +72,11 @@ def discography(request):
 
 
 def interactive(request):
-    return render(request, 'pages/interactive.html')
+    return render(request, 'pages/interactive.html', {
+        'songs': Song.objects.filter(is_active=True),
+        'silent_movies': SilentMovie.objects.filter(is_active=True),
+        'hide_bandcamp_player': True,
+    })
 
 
 def contact(request):

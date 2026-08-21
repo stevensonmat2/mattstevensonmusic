@@ -2,7 +2,17 @@ from django import forms
 from django.contrib import admin
 from django_ckeditor_5.widgets import CKEditor5Widget
 
-from .models import Article, DailyVisitor, Post, Release, SiteSettings, Tag, VisitorCountSnapshot
+from .models import (
+    Article,
+    DailyVisitor,
+    Post,
+    Release,
+    SilentMovie,
+    SiteSettings,
+    Song,
+    Tag,
+    VisitorCountSnapshot,
+)
 
 
 @admin.register(VisitorCountSnapshot)
@@ -99,3 +109,24 @@ class ReleaseAdmin(admin.ModelAdmin):
     list_display = ('title', 'artist', 'release_date', 'sort_order', 'link')
     search_fields = ('title', 'artist', 'text')
     list_editable = ('sort_order',)
+
+
+@admin.register(Song)
+class SongAdmin(admin.ModelAdmin):
+    list_display = ('title', 'artist', 'is_active', 'sort_order')
+    list_filter = ('is_active',)
+    list_editable = ('is_active', 'sort_order')
+    search_fields = ('title', 'artist')
+    fieldsets = (
+        (None, {'fields': ('title', 'artist', 'audio')}),
+        ('Playback', {'fields': ('effect_parameters', 'is_active', 'sort_order')}),
+    )
+
+
+@admin.register(SilentMovie)
+class SilentMovieAdmin(admin.ModelAdmin):
+    list_display = ('title', 'is_active', 'sort_order')
+    list_filter = ('is_active',)
+    list_editable = ('is_active', 'sort_order')
+    search_fields = ('title',)
+    fields = ('title', 'video', 'effect_parameters', 'is_active', 'sort_order')

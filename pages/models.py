@@ -232,3 +232,42 @@ class Release(models.Model):
             attributes=ALLOWED_ATTRIBUTES,
             protocols={'http', 'https', 'mailto'},
         )
+
+
+class Song(models.Model):
+    title = models.CharField(max_length=200)
+    artist = models.CharField(max_length=200, blank=True)
+    audio = models.FileField(upload_to='songs/')
+    effect_parameters = models.JSONField(
+        default=dict,
+        blank=True,
+        help_text='Tone.js effect settings as JSON. Leave empty for a dry signal.',
+    )
+    is_active = models.BooleanField(default=True)
+    sort_order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ('sort_order', 'title', 'pk')
+
+    def __str__(self):
+        return self.title
+
+
+class SilentMovie(models.Model):
+    title = models.CharField(max_length=200)
+    video = models.FileField(upload_to='movies/')
+    effect_parameters = models.JSONField(
+        default=dict,
+        blank=True,
+        help_text='Visual effect settings as JSON. Leave empty for the original image.',
+    )
+    is_active = models.BooleanField(default=True)
+    sort_order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ('sort_order', 'title', 'pk')
+        verbose_name = 'silent movie'
+        verbose_name_plural = 'silent movies'
+
+    def __str__(self):
+        return self.title
